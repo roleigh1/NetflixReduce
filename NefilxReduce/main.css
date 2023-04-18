@@ -1,0 +1,16 @@
+body {
+    background-image: linear-gradient(to right, #261f21, #b20a2c);
+    font-family: 'Poppins', sans-serif;
+    
+}
+.hline {
+color:rgb(188, 182, 182);
+}
+.empty{
+color:rgb(233, 228, 228); 
+font-size: 0.8rem;
+}
+.timer {
+    color:rgb(233, 228, 228);
+    font-size: 2rem;
+}
