@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "NetflixReduction",
+  "description": "Reduce your time on Netflix",
+  "version": "1.0",
+  "icons": {
+    "16": "images/time_16.png",
+    "48": "images/time_48.png",
+    "128": "images/time_128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "action": {
+    "default_icon": {
+      "16": "images/time_16.png",
+      "48": "images/time_48.png",
+      "128": "images/time_128.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [{
+    "matches": ["https://www.netflix.com/*"],
+    "js": ["content_script.js"],
+    "css": ["main.css"]
+  }]
+}
