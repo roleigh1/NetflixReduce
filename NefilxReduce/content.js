@@ -15,7 +15,12 @@ const generateCSS = () => {
     document.body.innerHTML = generateHTML();
     document.head.innerHTML = generateCSS();
   }
-
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if(request.message === "Hallo von Hintergrundskript!"){
+    console.log(request.message);
+  }
+})
+  
 
 console.log("content script says hello ")
 
