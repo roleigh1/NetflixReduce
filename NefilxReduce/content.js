@@ -5,22 +5,31 @@ const generateHTML = () => {
 }
 const generateCSS = () => {
   return `<style> 
-
+  body {
+    background-color: grey; 
+   
+  }
   #headline {
     color: black;
   }
   </style> `
 }
+let originalHTML; 
+let originalCSS; 
+ // check if we open netflix and gonna block it
   if(window.location.hostname === "www.netflix.com") {
+    originalHTML = document.body.innerHTML; 
+    originalCSS = document.head.innerHTML; 
     document.body.innerHTML = generateHTML();
-    document.head.innerHTML = generateCSS();
+    document.head.innerHTML = generateCSS()
   }
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if(request.message === "Hallo von Hintergrundskript!"){
-    console.log(request.message);
-  }
-})
-  
-
-console.log("content script says hello ")
-
+ // message passing from background script to unblock netflix
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if(request.message === "Hello from backgroundscript!"){
+      console.log(request.message);
+      // set the content to netflix
+      document.body.innerHTML = originalHTML;
+      document.head.innerHTML = originalCSS; 
+    }
+  })
+    
