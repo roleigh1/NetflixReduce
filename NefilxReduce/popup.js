@@ -1,34 +1,10 @@
-let countdown;
+
 const timerDisplay = document.querySelector(".timer");
-const input = document.querySelector("#input");
+var input = document.querySelector("#input");
 const submitButton = document.querySelector("#submit");
+const emptySpan = document.querySelector(".empty"); 
 
-function timer(seconds) {
-  clearInterval(countdown);
 
-  const now = Date.now();
-  const then = now + seconds * 1000;
-  displayTimeLeft(seconds);
-
-  countdown = setInterval(() => {
-    const secondsLeft = Math.round((then - Date.now()) / 1000);
-
-    if (secondsLeft < 0) {
-      clearInterval(countdown);
-      closeNetflix();
-      return;
-    }
-
-    displayTimeLeft(secondsLeft);
-  }, 1000);
-}
-
-function displayTimeLeft(seconds) {
-  const minutes = Math.floor(seconds / 60);
-  const remainderSeconds = seconds % 60;
-  const display = `${minutes < 10 ? '0' : ''}${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
-  timerDisplay.textContent = display;
-}
 
 function closeNetflix() {
   chrome.tabs.query({ url: "*://www.netflix.com/*" }, function (tabs) {
@@ -38,14 +14,13 @@ function closeNetflix() {
   });
 }
 submitButton.addEventListener("click", function() {
-  chrome.runtime.sendMessage({action: "executeFunction"});
-    const inputVal = parseFloat(input.value);
-    if(isNaN(inputVal)) {
-      return;
-    }
-  
-    const seconds = Math.round(inputVal * 60);
-    timer(seconds);
-    
-  });
- 
+  const inputValue = input.value.trim(); 
+  const time = parseInt(inputValue);
+
+  if (time <= 0 || isNaN(time)) {
+    emptySpan.innerHTML = "Please enter the minutes.";
+  } else {
+    chrome.runtime.sendMessage({timeInMinutes: time, action: "executeFunction"});
+    emptySpan.innerHTML = "";
+  }
+});
