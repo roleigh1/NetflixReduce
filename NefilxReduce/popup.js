@@ -6,6 +6,22 @@ const emptySpan = document.querySelector(".empty");
 
 
 
+submitButton.addEventListener("click", function() {
+  const inputValue = input.value.trim(); 
+  const time = parseInt(inputValue);
+
+  if (time <= 0 || isNaN(time)) {
+    emptySpan.innerHTML = "Please enter a positive number of minutes.";
+  } else {
+    chrome.runtime.sendMessage({timeInMinutes: time, action: "executeFunction"});
+    emptySpan.innerHTML = "";
+  }
+});
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if(request.timerFinished) {
+    closeNetflix(); 
+  }
+})
 function closeNetflix() {
   chrome.tabs.query({ url: "*://www.netflix.com/*" }, function (tabs) {
     if (tabs.length > 0) {
@@ -13,14 +29,3 @@ function closeNetflix() {
     }
   });
 }
-submitButton.addEventListener("click", function() {
-  const inputValue = input.value.trim(); 
-  const time = parseInt(inputValue);
-
-  if (time <= 0 || isNaN(time)) {
-    emptySpan.innerHTML = "Please enter the minutes.";
-  } else {
-    chrome.runtime.sendMessage({timeInMinutes: time, action: "executeFunction"});
-    emptySpan.innerHTML = "";
-  }
-});
