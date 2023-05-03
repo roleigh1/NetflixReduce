@@ -11,11 +11,12 @@ chrome.webNavigation.onCommitted.addListener(function(details) {
  })
  // message passing between popup script and background script 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  const timeMinutes = request.timeInMinutes;
+  var timeMinutes = request.timeInMinutes;
   console.log("Input-Value:", timeMinutes);
   if (request.action == "executeFunction") {
     messageToContent()
-  }
+    startTimer(request.timeInMinutes);
+  } 
 });
 
 
@@ -24,5 +25,35 @@ function messageToContent() {
 chrome.tabs.query({active: true}, function(tabs) {
   chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from backgroundscript!"})
 });
-  
+}
+
+// logic timer
+var timerId = 0; 
+var timerLeft = 0; 
+
+function startTimer(minutes) {
+  timerLeft = minutes *60;
+  timerId = setInterval(updateTimer,1000); 
+}
+function updateTimer() {
+  timerLeft -= 1;
+  if(timerLeft <= 0) {
+    clearInterval(timerId);
+    chrome.runtime.sendMessage({timerFinished: true}); 
+    console.log("Timer abgelaufen!");
+  } else {
+    console.log("Verbleibende Zeit:" + formatTime(timerLeft));
+  }
+}
+function formatTime(timeInSeconds) {
+ var minutes = Math.floor(timeInSeconds / 60); 
+ var seconds = timeInSeconds % 60; 
+ return padZero(minutes) + ":" + padZero(seconds);
+};
+function padZero(num) {
+  if(num < 10) {
+    return "0" + num; 
+  } else {
+    return "" + num; 
+  }
 }
