@@ -1,7 +1,7 @@
-
+let timerRunning = false; 
 // we open the html file when we visting netflix.
 chrome.webNavigation.onCommitted.addListener(function(details) {
-  if (details.url.startsWith("https://www.netflix.com/")) {
+  if (details.url.startsWith("https://www.netflix.com/") && !timerRunning) {
      chrome.windows.create({url: chrome.runtime.getURL("popup.html"), type:"popup", width : 400, height: 600});
   }
 });
@@ -41,6 +41,7 @@ function updateTimer() {
     clearInterval(timerId);
     chrome.runtime.sendMessage({timerFinished: true}); 
     console.log("Timer abgelaufen!");
+    timerRunning = false; 
   } else {
     chrome.runtime.sendMessage({timerValue: formatTime(timerLeft)});
     console.log("Verbleibende Zeit:" + formatTime(timerLeft));
