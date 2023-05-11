@@ -1,41 +1,39 @@
 
-
-const generateHTML = () => {
+let generateHTML = () => {
   return `<div id="headline">
-    Select the time on the popup you wanna spend on netflix.
+    Select the time on the popup you wanna spend on Netflix.
   </div>`
-}
-const generateCSS = () => {
-  return `<style> 
-  body {
-    background-color: grey; 
-   
-  }
-  #headline {
-    color: black;
-  }
-  </style> `
-}
-let originalHTML; 
-let originalCSS; 
+};
 
-  if(window.location.hostname === "www.netflix.com") {
+let generateCSS = () => {
+  return `<style> 
+    body {
+      background-color: grey; 
+    }
+    #headline {
+      color: black;
+    }
+  </style>`
+};
+
+let originalHTML = document.body.innerHTML;
+let originalCSS = document.head.innerHTML;
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+// message passing from background script 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.message === "Block content!") {
+    console.log(request.message);
     originalHTML = document.body.innerHTML; 
     originalCSS = document.head.innerHTML; 
-
     document.body.innerHTML = generateHTML();
-    document.head.innerHTML = generateCSS()
+    document.head.innerHTML = generateCSS();
   }
-  if(window.location.pathname === "watch/*"){
-  document.body.innerHTML = originalHTML; 
-  document.head.innerHTML = originalCSS;
-   
+
+  if (request.message === "Hello from backgroundscript!") {
+    console.log(request.message);
+    document.body.innerHTML = originalHTML;
+    document.head.innerHTML = originalCSS;
   }
- // message passing from background script 
-  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if(request.message === "Hello from backgroundscript!"){
-      console.log(request.message);
-      document.body.innerHTML = originalHTML;
-      document.head.innerHTML = originalCSS; 
-    }
-  })
+});
+});
