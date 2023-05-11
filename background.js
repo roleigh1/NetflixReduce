@@ -3,6 +3,7 @@ let timerRunning = false;
 chrome.webNavigation.onCommitted.addListener(function(details) {
   if (details.url.startsWith("https://www.netflix.com/") && !timerRunning) {
      chrome.windows.create({url: chrome.runtime.getURL("popup.html"), type:"popup", width : 400, height: 600});
+    timerRunning = true; 
   }
 });
 // We log something in the console to see the background script works 
