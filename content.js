@@ -1,11 +1,11 @@
 
-let generateHTML = () => {
+var generateHTML = () => {
   return `<div id="headline">
     Select the time on the popup you wanna spend on Netflix.
   </div>`
 };
 
-let generateCSS = () => {
+var generateCSS = () => {
   return `<style> 
     body {
       background-color: grey; 
@@ -15,25 +15,22 @@ let generateCSS = () => {
     }
   </style>`
 };
+var originalHTML = document.body.innerHTML;
+var originalCSS = document.head.innerHTML;
 
-let originalHTML = document.body.innerHTML;
-let originalCSS = document.head.innerHTML;
+if (window.location.hostname === "www.netflix.com" && window.location.pathname === "/browse") {
+  // Code, der ausgeführt wird, wenn Sie sich auf "www.netflix.com/browse" befinden
+document.body.innerHTML = generateHTML();
+document.head.innerHTML = generateCSS(); 
 
-document.addEventListener("DOMContentLoaded", function(event) { 
+
+}
 // message passing from background script 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.message === "Block content!") {
-    console.log(request.message);
-    originalHTML = document.body.innerHTML; 
-    originalCSS = document.head.innerHTML; 
-    document.body.innerHTML = generateHTML();
-    document.head.innerHTML = generateCSS();
-  }
-
   if (request.message === "Hello from backgroundscript!") {
     console.log(request.message);
     document.body.innerHTML = originalHTML;
     document.head.innerHTML = originalCSS;
   }
 });
-});
+
