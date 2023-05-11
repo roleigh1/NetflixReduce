@@ -1,16 +1,11 @@
-
 var timerRunning = false;
 
-// we open the html file when we visit netflix.
 chrome.webNavigation.onCommitted.addListener(function(details) {
   if (details.url.startsWith("https://www.netflix.com/") && !timerRunning) {
     chrome.windows.create({url: chrome.runtime.getURL("popup.html"), type:"popup", width : 400, height: 600});
     timerRunning = true; 
-    chrome.tabs.query({active: true}, function(tabs){ // message to contentscript to block netflix till timer is running
-    chrome.tabs.sendMessage(tabs[0].id, {message:"Block content!"});
-  })
-  }
-});
+}
+})
 
 // We log something in the console to see the background script works
 chrome.runtime.onInstalled.addListener(function() {
@@ -33,6 +28,7 @@ function messageToContent() {
     chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from backgroundscript!"});
   });
 }
+
 
 // logic timer
 var timerId = 0;
@@ -69,3 +65,5 @@ function padZero(num) {
     return "" + num;
   }
 }
+
+
