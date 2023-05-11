@@ -15,7 +15,7 @@ submitButton.addEventListener("click", function() {
     chrome.runtime.sendMessage({timeInMinutes: time, action: "executeFunction"});
     emptySpan.innerHTML = "";
   }
-});
+})
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if(request.timerFinished) {
     closeNetflix(); 
