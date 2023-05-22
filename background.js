@@ -3,8 +3,12 @@ var timerRunning = false;
 chrome.webNavigation.onCommitted.addListener(function(details) {
   if (details.url.startsWith("https://www.netflix.com/") && !timerRunning) {
     chrome.windows.create({url: chrome.runtime.getURL("popup.html"), type:"popup", width : 400, height: 600});
+    chrome.storage.local.set({ timeSet: "false" }, function () {
+      console.log("Value stored in local storage");
+    });
     timerRunning = true; 
-}
+} 
+
 })
 
 // We log something in the console to see the background script works
@@ -37,12 +41,18 @@ var timerLeft = 0;
 function startTimer(minutes) {
   timerLeft = minutes * 60;
   timerId = setInterval(updateTimer, 1000);
+  chrome.storage.local.set({ timeSet: "true" }, function () {
+    console.log("Value stored in local storage");
+  });
 }
 
 function updateTimer() {
   timerLeft -= 1;
   if(timerLeft <= 0) {
     clearInterval(timerId);
+    chrome.storage.local.set({ timeSet: "false" }, function () {
+      console.log("Value stored in local storage");
+    });
     chrome.runtime.sendMessage({timerFinished: true});
     console.log("Timer abgelaufen!");
     timerRunning = false;

@@ -1,10 +1,9 @@
-
 var generateHTML = () => {
   return `
   <div class="container">
   <div id="cloud-intro"></div>
 </div>
-  `
+  `;
 };
 
 var generateCSS = () => {
@@ -40,19 +39,27 @@ var generateCSS = () => {
     }
   
   }
-  </style>`
+  </style>`;
 };
 var originalHTML = document.body.innerHTML;
 var originalCSS = document.head.innerHTML;
 
-if (window.location.hostname === "www.netflix.com" && window.location.pathname === "/browse") {
-document.body.innerHTML = generateHTML();
-document.head.innerHTML = generateCSS(); 
-
-
+if (
+  window.location.hostname === "www.netflix.com" &&
+  window.location.pathname === "/browse"
+) {
+  chrome.storage.local.get("timeSet", function (result) {
+    if (result.timeSet === "true") {
+      document.body.innerHTML = originalHTML;
+      document.head.innerHTML = originalCSS;
+    } else {
+      document.body.innerHTML = generateHTML();
+      document.head.innerHTML = generateCSS();
+    }
+  });
 }
-// message passing from background script 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+// message passing from background script
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.message === "Hello from backgroundscript!") {
     console.log(request.message);
     document.body.innerHTML = originalHTML;

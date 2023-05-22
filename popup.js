@@ -7,7 +7,7 @@ const emptySpan = document.querySelector(".empty");
 
 submitButton.addEventListener("click", function() {
   const inputValue = input.value.trim(); 
-  const time = parseInt(inputValue);
+  const time = parseFloat(inputValue);
 
   if (time <= 0 || isNaN(time)) {
     emptySpan.innerHTML = "Please enter a positive number of minutes.";
